@@ -8,7 +8,7 @@ import { ToDo } from "@/app/components/types";
 export async function addToDo(formData: FormData) {
   await prisma.toDo.create({
     data: {
-      title: formData.get("title")?.toString() ?? 'No Title'
+      title: formData.get("title")?.toString() || 'No Title'
     },
   });
   revalidatePath("/");
@@ -30,7 +30,7 @@ export async function updateToDo(toDo: ToDo) {
     where: {
       id: id,
     },
-    data: {
+    data: { 
       ...toDoData,
     },
   });

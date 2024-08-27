@@ -6,5 +6,5 @@ export type ToDo = {
   isComplete?: boolean;
   weight?: number;
   index?: number;
-  created?: number;
+  created?: Date;
 }

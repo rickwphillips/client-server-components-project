@@ -12,14 +12,12 @@ export function ToDoList({
 }: { 
   toDos: ToDo[] 
 }) {
-
   const [orderedToDos, setOrderedToDos] = useState<ToDo[]>(toDos);
 
   useMemo(() => {
-    toDos = toDos.map((toDo, index) => ({...toDo, index: toDo.index ?? index - 1}));
+    toDos = toDos.map((toDo, index) => ({ ...toDo, index: toDo.index ?? index }));
     setOrderedToDos(toDos);
   }, [toDos]);
-
 
   const moveCard = useCallback( 
     (dragIndex: number, hoverIndex: number) => {
@@ -33,20 +31,19 @@ export function ToDoList({
     });
   }, []);
 
-
   const renderToDo = useCallback(
     (toDo: ToDo, index: number) => 
       <ToDoItem key={toDo.id} toDo={toDo} index={index} moveCard={moveCard} />
-    , []);
+  , []);
 
-    return (
-      <>
-        <div className="flex w-100 justify-center italic m-2">{toDos.length} Task(s)</div>
-        <DndProvider backend={HTML5Backend}>
-          <ul className="mt-2 pl-0">
-            { orderedToDos.map( (toDo, index) => renderToDo(toDo, index) ) }
-          </ul>
-        </DndProvider>
-      </>
-    );
+  return (
+    <>
+      <div className="flex w-100 justify-center italic m-2">{toDos.length} Task(s)</div>
+      <DndProvider backend={HTML5Backend}>
+        <ul className="mt-2 pl-0">
+          { orderedToDos.map( (toDo, index) => renderToDo(toDo, index) ) }
+        </ul>
+      </DndProvider>
+    </>
+  );
 }

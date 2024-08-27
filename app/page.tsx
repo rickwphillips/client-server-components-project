@@ -10,7 +10,7 @@ export default async function Home() {
 
   return (
     <main className="container max-w-lg">
-        <div className=" max-w-96">
+        <div className="max-w-96">
           <h2>To Dos</h2>
           <AddToDoForm />
           <ToDoList toDos={toDos} />

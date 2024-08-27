@@ -15,11 +15,7 @@ export function ToDoItem({
   const ref = useRef(null);
 
   useEffect(() => { 
-    if (toDo.weight !== index) {
-      debugger;
-      toDo.weight = index;
-      updateToDo(toDo);
-    } 
+    if (toDo.weight !== index) updateToDo({ ...toDo, weight: index });
   }, [index]);
 
   const [{ handlerId }, drop] = useDrop({
@@ -31,16 +27,13 @@ export function ToDoItem({
     },
     hover(item, monitor) {
 
-      if (!ref.current) {
-        return
-      }
+      if (!ref.current) return;
+      
       const dragIndex = (item as ToDo).index;
       const hoverIndex = index;
       // Don't replace items with themselves
-      if (dragIndex === hoverIndex) {
-        return
-      }
-
+      if (dragIndex === hoverIndex) return;
+    
       // Determine rectangle on screen
       const hoverBoundingRect = (ref.current as HTMLElement).getBoundingClientRect();
       // Get vertical middle
@@ -60,7 +53,6 @@ export function ToDoItem({
       if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
         return
       }
-
       // Dragging upwards
       if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
         return
@@ -78,13 +70,8 @@ export function ToDoItem({
 
   const [{ isDragging }, drag] = useDrag({
     type: 'card',
-    item: () => {
-      const id = toDo.id; // Declare or initialize the 'id' variable
-      return { id, index }
-    },
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
-    }),
+    item: (id) => ({ id, index }),
+    collect: (monitor) => ({ isDragging: monitor.isDragging() }),
   });
 
   const toggleComplete = () => {
@@ -93,17 +80,18 @@ export function ToDoItem({
       isComplete: !toDo.isComplete,
     });
   }
-  const opacity = isDragging ? 0 : 1;
+
   drag(drop(ref));
   const completedStyle = toDo.isComplete ? "line-through" : "none";
 
   return  (
-    <li key={toDo.id}
-        ref={ref} 
-        className="flex justify-between items-center odd:bg-white even:bg-slate-200">
+    <li 
+      key={toDo.id}
+      ref={ref} 
+      className="flex justify-between items-center odd:bg-white even:bg-slate-200">
       <div>
         <Checkbox checked={toDo.isComplete} onClick={toggleComplete} />
-      <span className={completedStyle}>{toDo.title}</span>
+        <span className={completedStyle}>{toDo.title}</span>
       </div>
       <span
         className="material-icons-two-tone cursor-pointer"
